@@ -1,7 +1,7 @@
 /**
  * Created by Victorien on 24-06-16.
  */
-//var socket = io.connect('http://localhost:3000');
+//var socket = io.connect('http://localhost:3000') ;
 const exec = require('child_process').exec;
 const getSerial = "cat /proc/cpuinfo | grep Serial | cut -d ':' -f 2";
 
@@ -33,7 +33,7 @@ function setTimer(beginHour, beginMinute, endHour, endMinute, frequency){
     //get time to record
     var timeRecord = (((endHour*3600)+(endMinute*60))-((beginHour*3600)+(beginMinute*60)));
     //get camera name
-    var cameraName = 'cuisine';
+    var cameraName = 'Cuisine';
     //get frequency for cron
     var freq = "";
     switch(frequency) {

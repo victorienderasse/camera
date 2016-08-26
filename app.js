@@ -68,7 +68,7 @@ app.use(function(err, req, res, next) {
 
 */
 
-socket = require('socket.io-client')('http://localhost:3000');
+socket = require('socket.io-client')('http://192.168.1.100:3000');
 //var socket = io.connect('http://localhost:3000');
 socket.on('connect', function () {
   require('./public/javascripts/camera.js');
