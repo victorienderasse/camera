@@ -15,6 +15,10 @@ socket.on('timer', function(data){
     console.log("On timer ok");
 });
 
+socket.on('test', function(cameraID){
+   console.log(cameraID);
+});
+
 //Functions-----------------------------
 
 
