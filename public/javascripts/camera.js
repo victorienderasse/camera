@@ -67,7 +67,7 @@ function setTimer(beginHour, beginMinute, endHour, endMinute, frequency){
     }
 
     var cron = beginMinute+" "+beginHour+" * * "+freq+" pi ";
-    var cmdPython = "python /home/pi/TFE/python/record/record.py -c /home/pi/TFE/python/record/conf.json -t "+time$
+    var cmdPython = "python /home/pi/TFE/python/record/record.py -c /home/pi/TFE/python/record/conf.json -t "+timeRecord+" -n "+cameraName;
     var cmd = "echo '"+cron+cmdPython+"' > /etc/cron.d/record";
     console.log(cmd);
     console.log("before exec");
