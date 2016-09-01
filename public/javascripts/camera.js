@@ -11,6 +11,7 @@ connectServer();
 
 socket.on('timer', function(data){
     console.log("on timer");
+    concole.log('begin hour = '+data.begin_hour);
     setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency);
     console.log("On timer ok");
 });
