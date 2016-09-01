@@ -3,7 +3,6 @@
  */
 //var socket = io.connect('http://localhost:3000') ;
 const exec = require('child_process').exec;
-const getSerial = "cat /proc/cpuinfo | grep Serial | cut -d ':' -f 2";
 
 connectServer();
 
@@ -20,10 +19,22 @@ socket.on('test', function(cameraID){
    console.log(cameraID);
 });
 
+
+socket.on('deleteRecord',function(){
+    const cmd = "echo '' > /etc/cron.d/record";
+    exec(cmd, function(error, stdout, stderr) {
+        if(error){
+            console.log(error);
+        }
+        console.log(stdout);
+    });
+});
+
 //Functions-----------------------------
 
 
 function connectServer(){
+    const getSerial = "cat /proc/cpuinfo | grep Serial | cut -d ':' -f 2";
     exec(getSerial, function(error, stdout, stderr){
         if(error){
             console.log('error : '+ error);
