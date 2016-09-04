@@ -9,7 +9,7 @@ connectServer();
 //Events
 
 socket.on('timer', function(data){
-    console.log("on timer");
+    console.log("timer event");
     setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName);
 });
 
@@ -19,12 +19,12 @@ socket.on('test', function(cameraID){
 
 
 socket.on('deleteRecord',function(){
+    console.log('delete record event');
     const cmd = "echo '' > /etc/cron.d/record";
     exec(cmd, function(error, stdout, stderr) {
         if(error){
             console.log(error);
         }
-        console.log('remove record in .etc/cron.d/record file');
     });
 });
 
@@ -37,13 +37,12 @@ function connectServer(){
         if(error){
             console.log('error : '+ error);
         }
-        console.log(stdout);
         socket.emit('camera', stdout);
     });
 }
 
 function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraName){
-    console.log('in function setTimer :');
+    console.log('setTimer function');
     //get time to record
     var timeRecord = (((endHour*3600)+(endMinute*60))-((beginHour*3600)+(beginMinute*60)));
     //get frequency for cron
@@ -78,15 +77,11 @@ function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraN
     var cmdPython = "python /home/pi/TFE/python/record/record.py -c /home/pi/TFE/python/record/conf.json -t "+timeRecord+" -n "+cameraName;
     var cmd = "echo '"+cron+cmdPython+"' > /etc/cron.d/record";
     console.log(cmd);
-    console.log("before exec");
     exec(cmd, function(error, stdout, stderr) {
         if(error){
             console.log(error);
         }
-        console.log(stdout);
     });
-
-    console.log("after exec");
 }
 
 
