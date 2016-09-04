@@ -10,9 +10,7 @@ connectServer();
 
 socket.on('timer', function(data){
     console.log("on timer");
-    console.log('begin hour = '+data.begin_hour);
-    setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency);
-    console.log("On timer ok");
+    setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName);
 });
 
 socket.on('test', function(cameraID){
@@ -26,7 +24,7 @@ socket.on('deleteRecord',function(){
         if(error){
             console.log(error);
         }
-        console.log(stdout);
+        console.log('remove record in .etc/cron.d/record file');
     });
 });
 
@@ -44,12 +42,10 @@ function connectServer(){
     });
 }
 
-function setTimer(beginHour, beginMinute, endHour, endMinute, frequency){
+function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraName){
     console.log('in function setTimer :');
     //get time to record
     var timeRecord = (((endHour*3600)+(endMinute*60))-((beginHour*3600)+(beginMinute*60)));
-    //get camera name
-    var cameraName = 'Cuisine';
     //get frequency for cron
     var freq = "";
     switch(frequency) {
