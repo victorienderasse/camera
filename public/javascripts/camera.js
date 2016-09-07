@@ -3,6 +3,7 @@
  */
 //var socket = io.connect('http://localhost:3000') ;
 const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
 
 connectServer();
 
@@ -26,6 +27,12 @@ socket.on('deleteRecord',function(){
             console.log(error);
         }
     });
+});
+
+
+socket.on('startDetection', function(name){
+    var proc = spawn("python", ["/home/pi/TFE/python/motion_detection/motion_detector.py", "-c", "/home/pi/TFE/python/motion_detection/conf.json", "-n", name]);
+    console.log('pid : '+proc.pid);
 });
 
 //Functions-----------------------------
