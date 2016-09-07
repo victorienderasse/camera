@@ -32,7 +32,7 @@ socket.on('deleteRecord',function(){
 
 socket.on('startDetection', function(name){
     var proc = spawn("python", ["/home/pi/TFE/python/motion_detection/motion_detector.py", "-c", "/home/pi/TFE/python/motion_detection/conf.json", "-n", name]);
-    console.log('pid : '+proc.pid);
+    socket.emit('setProcessPID',{pid: proc.pid, cameraName: name});
 });
 
 
@@ -93,6 +93,7 @@ function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraN
         if(error){
             console.log(error);
         }
+        socket.emit('setProcessPID',{pid: exec.pid, cameraName:cameraName});
     });
 }
 
