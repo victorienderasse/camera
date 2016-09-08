@@ -97,7 +97,7 @@ function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraN
            // console.log(error);
         //}
         socket.emit('setProcessPID',{pid: exec.pid, cameraName: cameraName});
-        console.log('emit PID : pid = '+spawn.pid+' et cameraName = '+cameraName);
+        console.log('emit PID : pid = '+nexCmd.pid+' et cameraName = '+cameraName);
     //});
 }
 
