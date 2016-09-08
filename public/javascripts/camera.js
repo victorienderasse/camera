@@ -21,17 +21,13 @@ socket.on('test', function(cameraID){
 
 socket.on('deleteRecord',function(){
     console.log('delete record event');
-    const cmd = "echo '' > /etc/cron.d/record";
-    exec(cmd, function(error, stdout, stderr) {
-        if(error){
-            console.log(error);
-        }
-    });
+    deleteRecords();
 });
 
 
 socket.on('startDetection', function(name){
     console.log('startDetection event');
+    deleteRecords();
     var proc = spawn("python", ["/home/pi/TFE/python/motion_detection/motion_detector.py", "-c", "/home/pi/TFE/python/motion_detection/conf.json", "-n", name]);
     socket.emit('setProcessPID',{pid: proc.pid, cameraName: name});
 });
@@ -52,6 +48,15 @@ function connectServer(){
             console.log('error : '+ error);
         }
         socket.emit('camera', stdout);
+    });
+}
+
+function deleteRecords(){
+    const cmd = "echo '' > /etc/cron.d/record";
+    exec(cmd, function(error, stdout, stderr) {
+        if(error){
+            console.log(error);
+        }
     });
 }
 
