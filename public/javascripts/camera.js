@@ -39,7 +39,7 @@ socket.on('startDetection', function(name){
 
 socket.on('stopDetection', function(data){
     console.log('stopDetection event');
-    console.log('cameraID : '+data.cameraID+' et processPID : '+data.processPID);
+    process.kill(data.processPID);
 });
 
 //Functions-----------------------------
