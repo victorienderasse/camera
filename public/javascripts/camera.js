@@ -90,15 +90,15 @@ function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraN
     var cron = beginMinute+" "+beginHour+" * * "+freq+" pi ";
     var cmdPython = "python /home/pi/TFE/python/record/record.py -c /home/pi/TFE/python/record/conf.json -t "+timeRecord+" -n "+cameraName;
     var cmd = "echo '"+cron+cmdPython+"' > /etc/cron.d/record";
-    var nexCmd = spawn('echo', [beginMinute, beginHour, "*", "*", freq, "pi", "python", "/home/pi/TFE/python/record/record.py", "-c", "/home/pi/TFE/python/record/conf.json", "-t", timeRecord, "-n", cameraName]);
-    //console.log(cmd);
-    //exec(cmd, function(error, stdout, stderr) {
-        //if(error){
-           // console.log(error);
-        //}
+    //var nexCmd = spawn('echo', [beginMinute, beginHour, "*", "*", freq, "pi", "python", "/home/pi/TFE/python/record/record.py", "-c", "/home/pi/TFE/python/record/conf.json", "-t", timeRecord, "-n", cameraName]);
+    console.log(cmd);
+    var runExec = exec(cmd, function(error, stdout, stderr) {
+        if(error){
+           console.log(error);
+        }
         socket.emit('setProcessPID',{pid: exec.pid, cameraName: cameraName});
-        console.log('emit PID : pid = '+nexCmd.pid+' et cameraName = '+cameraName);
-    //});
+        console.log('emit PID : pid = '+runExec.pid+' et cameraName = '+cameraName);
+    });
 }
 
 
