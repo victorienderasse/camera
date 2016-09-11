@@ -25,11 +25,11 @@ socket.on('deleteRecord',function(){
 });
 
 
-socket.on('startDetection', function(name){
+socket.on('startDetection', function(data){
     console.log('startDetection event');
     deleteRecords();
-    var proc = spawn("python", ["/home/pi/TFE/python/motion_detection/motion_detector.py", "-c", "/home/pi/TFE/python/motion_detection/conf.json", "-n", name]);
-    socket.emit('setProcessPID',{pid: proc.pid, cameraName: name});
+    var proc = spawn("python", ["/home/pi/TFE/python/motion_detection/motion_detector.py", "-c", "/home/pi/TFE/python/motion_detection/conf.json", "-n", data.cameraName]);
+    socket.emit('setProcessPID',{pid: proc.pid, cameraID: data.cameraID});
 });
 
 
@@ -37,6 +37,20 @@ socket.on('stopDetection', function(data){
     console.log('stopDetection event');
     process.kill(data.processPID);
 });
+
+
+socket.on('startStream', function(cameraID){
+    const startStream = "python /home/pi/TFE/python/liveStream/liveStream.py --id "+cameraID;
+    var proc = exec(startStream, function (err, stdout, stderr) {
+        if(err){
+            throw err;
+        }
+        console.log('start stream');
+        socket.emit('setProcessPID', {pid: proc.pid, cameraID: cameraID});
+    });
+});
+
+
 
 //Functions-----------------------------
 
