@@ -40,6 +40,7 @@ socket.on('stopDetection', function(data){
 
 
 socket.on('startStream', function(cameraID){
+    console.log('startStream event');
     const startStream = "python /home/pi/TFE/python/liveStream/liveStream.py --id "+cameraID;
     var proc = exec(startStream, function (err, stdout, stderr) {
         if(err){
