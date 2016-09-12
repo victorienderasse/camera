@@ -11,7 +11,7 @@ connectServer();
 
 socket.on('timer', function(data){
     console.log("timer event");
-    setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName);
+    setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName, data.cameraID);
 });
 
 socket.on('test', function(cameraID){
@@ -77,7 +77,7 @@ function deleteRecords(){
     });
 }
 
-function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraName){
+function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraName, cameraID){
     console.log('setTimer function');
     //get time to record
     var timeRecord = (((endHour*3600)+(endMinute*60))-((beginHour*3600)+(beginMinute*60)));
@@ -117,6 +117,7 @@ function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraN
         if(error){
            console.log(error);
         }
+        socket.emit('setProcessPID',{pid: runExec.pid, cameraID: cameraID});
     });
 }
 
