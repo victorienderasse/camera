@@ -62,7 +62,8 @@ socket.on('stopStream', function(data){
 
 
 function killProcess(){
-    //spawn('./home/pi/TFE/killProcess.sh');
+    spawn('/home/pi/TFE/killProcess.sh');
+    /*
     var cmd = '/home/pi/TFE/killProcess.sh';
     exec(cmd, function(error, stdout, stderr){
         if(error){
@@ -70,6 +71,7 @@ function killProcess(){
         }
         console.log('process Kiled');
     });
+    */
 }
 
 
