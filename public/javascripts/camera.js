@@ -13,10 +13,10 @@ socket.on('timer', function(data){
     console.log("timer event");
     if(data.type == 'record') {
         deleteDetection();
-        setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName, data.cameraID);
+        setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName);
     }else{
         deleteRecords();
-        setDetection(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName, data.cameraID);
+        setDetection(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName);
     }
 });
 
@@ -116,7 +116,7 @@ function setDetection(beginHour, beginMinute, endHour, endMinute, frequency, cam
 }
 
 
-function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraName, cameraID){
+function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraName){
     console.log('setTimer function');
     //get time to record
     var timeRecord = (((endHour*3600)+(endMinute*60))-((beginHour*3600)+(beginMinute*60)));
