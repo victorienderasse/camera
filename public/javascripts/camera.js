@@ -11,7 +11,11 @@ connectServer();
 
 socket.on('timer', function(data){
     console.log("timer event");
-    setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName, data.cameraID);
+    if(data.type == 'record') {
+        setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName, data.cameraID);
+    }else{
+        setDetection(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName, data.cameraID);
+    }
 });
 
 socket.on('test', function(cameraID){
@@ -82,7 +86,7 @@ function connectServer(){
 }
 
 function deleteRecords(){
-    const cmd = "echo '' > /etc/cron.d/record";
+    const cmd = "echo '' > /etc/cron.d/record && echo '' > /etc/cron.d/detection";
     exec(cmd, function(error, stdout, stderr) {
         if(error){
             console.log(error);
@@ -90,47 +94,29 @@ function deleteRecords(){
     });
 }
 
+
+function setDetection(beginHour, beginMinute, endHour, endMinute, frequency, cameraName, cameraID){
+    var cronStart = beginMinute+' '+beginHour+' * * '+frequency+' pi ';
+    var cmdPython = 'python /home/pi/TFE/python/motion_detection/motion_detector.py -c /home/pi/TFE/python/motion_detection/conf.json -n '+cameraName;
+    var cmdStart = 'echo "'+cronStart+cmdPython+'" > /etc/cron.d/detection';
+    var cronEnd = endMinute+' '+endHour+' * * '+frequency+' pi ';
+    var cmdKill = '/home/pi/TFE/killProcess.sh';
+    var cmdEnd = 'echo "'+cronEnd+cmdKill+'" >> /etc/cron.d/detection';
+    exec(cmdStart, function(error, stdout, stderr){ if(error){ throw error; } });
+    exec(cmdEnd, function(error, stdout, stderr){ if(error){ throw error; } });
+}
+
+
 function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraName, cameraID){
     console.log('setTimer function');
     //get time to record
     var timeRecord = (((endHour*3600)+(endMinute*60))-((beginHour*3600)+(beginMinute*60)));
-    //get frequency for cron
-    var freq = "";
-    switch(frequency) {
-        case 'mon':
-            freq = "1";
-            break;
-        case 'tue':
-            freq = "2";
-            break;
-        case 'wed':
-            freq = "3";
-            break;
-        case 'thu':
-            freq = "4";
-            break;
-        case 'fri':
-            freq = "5";
-            break;
-        case 'sat':
-            freq = "6";
-            break;
-        case 'sun':
-            freq = "7";
-            break;
-        default:
-            freq = "*";
-    }
-
-    var cron = beginMinute+" "+beginHour+" * * "+freq+" pi ";
+    //cron cmd
+    var cron = beginMinute+" "+beginHour+" * * "+frequency+" pi ";
     var cmdPython = "python /home/pi/TFE/python/record/record.py -c /home/pi/TFE/python/record/conf.json -t "+timeRecord+" -n "+cameraName;
     var cmd = "echo '"+cron+cmdPython+"' > /etc/cron.d/record";
     console.log(cmd);
-    var runExec = exec(cmd, function(error, stdout, stderr) {
-        if(error){
-           console.log(error);
-        }
-    });
+    exec(cmd, function(error, stdout, stderr) { if(error){ throw error; } });
 }
 
 
