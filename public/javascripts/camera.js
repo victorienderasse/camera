@@ -12,9 +12,11 @@ connectServer();
 socket.on('timer', function(data){
     console.log("timer event");
     if(data.type == 'record') {
+        console.log('record');
         deleteDetection();
         setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName);
     }else{
+        console.log('detection');
         deleteRecords();
         setDetection(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName);
     }
