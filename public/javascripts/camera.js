@@ -12,8 +12,10 @@ connectServer();
 socket.on('timer', function(data){
     console.log("timer event");
     if(data.type == 'record') {
+        deleteDetection();
         setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName, data.cameraID);
     }else{
+        deleteRecords();
         setDetection(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName, data.cameraID);
     }
 });
@@ -86,12 +88,13 @@ function connectServer(){
 }
 
 function deleteRecords(){
-    const cmd = "echo '' > /etc/cron.d/record && echo '' > /etc/cron.d/detection";
-    exec(cmd, function(error, stdout, stderr) {
-        if(error){
-            console.log(error);
-        }
-    });
+    const cmdRecord = "echo '' > /etc/cron.d/record";
+    exec(cmdRecord, function(error, stdout, stderr) { if(error){ throw error; } });
+}
+
+function deleteDetection(){
+    const cmdDetection = 'echo "" > /etc/cron.d/detection';
+    exec(cmdDetection, function(error, stdout, stderr){ if(error){ throw error; } });
 }
 
 
