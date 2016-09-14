@@ -41,6 +41,8 @@ socket.on('stopDetection', function(data){
 
 socket.on('startStream', function(cameraID){
     console.log('startStream event');
+    deleteRecords();
+    killProcess();
     const startStream = "python /home/pi/TFE/python/liveStream/liveStream.py --id "+cameraID;
     var proc = spawn("python", ["/home/pi/TFE/python/liveStream/liveStream.py", "--id", cameraID]);
     console.log('start stream');
@@ -50,12 +52,18 @@ socket.on('startStream', function(cameraID){
 
 socket.on('stopStream', function(data){
     console.log('stopStream event');
-    process.kill(data.processPID);
+    //process.kill(data.processPID);
+    killProcess();
 });
 
 
 
 //Functions-----------------------------
+
+
+function killProcess(){
+    spawn('./home/pi/TFE/killProcess.sh');
+}
 
 
 function connectServer(){
@@ -117,7 +125,6 @@ function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraN
         if(error){
            console.log(error);
         }
-        socket.emit('setProcessPID',{pid: runExec.pid, cameraID: cameraID});
     });
 }
 
