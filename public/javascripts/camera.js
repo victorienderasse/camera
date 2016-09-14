@@ -30,7 +30,6 @@ socket.on('startDetection', function(data){
     killProcess();
     deleteRecords();
     setTimeout(function(){ spawn("python", ["/home/pi/TFE/python/motion_detection/motion_detector.py", "-c", "/home/pi/TFE/python/motion_detection/conf.json", "-n", data.cameraName]); },1000)
-    socket.emit('setProcessPID',{pid: proc.pid, cameraID: data.cameraID});
 });
 
 
