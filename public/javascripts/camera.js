@@ -31,6 +31,12 @@ socket.on('deleteRecord',function(){
 });
 
 
+socket.on('deleteDetection', function(){
+    console.log('deleteDetection event');
+    deleteDetection();
+});
+
+
 socket.on('startDetection', function(data){
     console.log('startDetection event');
     killProcess();
