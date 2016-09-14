@@ -41,7 +41,7 @@ socket.on('stopDetection', function(data){
 
 socket.on('startStream', function(cameraID){
     console.log('startStream event');
-    killProcess();
+    //killProcess();
     deleteRecords();
     const startStream = "python /home/pi/TFE/python/liveStream/liveStream.py --id "+cameraID;
     var proc = spawn("python", ["/home/pi/TFE/python/liveStream/liveStream.py", "--id", cameraID]);
