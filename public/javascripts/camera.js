@@ -89,7 +89,7 @@ function connectServer(){
     const getSerial = "cat /proc/cpuinfo | grep Serial | cut -d ':' -f 2";
     exec(getSerial, function(error, stdout, stderr){
         if(error){
-            console.log('error : '+ error);
+            throw error;
         }
         socket.emit('camera', stdout);
     });
