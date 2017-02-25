@@ -43,7 +43,9 @@ socket.on('startDetection', function(data){
     console.log('startDetection event');
     killProcess();
     deleteRecords();
-    setTimeout(function(){ spawn("python", ["/home/pi/TFE/python/motion_detection/motion_detector.py", "-c", "/home/pi/TFE/python/motion_detection/conf.json", "-n", data.cameraName]); },1000)
+    deleteDetection();
+    //Settimout pour éviter de kill notre nouveau process
+    setTimeout(function(){ spawn("python", ["/home/pi/TFE/python/motion_detection/motion_detector.py", "-c", "/home/pi/TFE/python/motion_detection/conf.json", "-i", data.cameraID, "-t", "0", "-n", data.cameraName]); },1000)
 });
 
 
@@ -57,6 +59,7 @@ socket.on('startStream', function(cameraID){
     console.log('startStream event');
     killProcess();
     deleteRecords();
+    deleteDetection();
     console.log('start stream');
     const startStream = "python /home/pi/TFE/python/liveStream/liveStream.py --id "+cameraID;
     setTimeout(function(){ spawn("python", ["/home/pi/TFE/python/liveStream/liveStream.py", "--id", cameraID]); },1000)
@@ -107,8 +110,11 @@ function deleteDetection(){
 
 
 function setDetection(beginHour, beginMinute, endHour, endMinute, frequency, cameraName, cameraID){
+    console.log('setDetection function');
+    //get time to record
+    var timeRecord = (((endHour*3600)+(endMinute*60))-((beginHour*3600)+(beginMinute*60)));
     var cronStart = beginMinute+' '+beginHour+' * * '+frequency+' pi ';
-    var cmdPython = 'python /home/pi/TFE/python/motion_detection/motion_detector.py -c /home/pi/TFE/python/motion_detection/conf.json -n '+cameraName;
+    var cmdPython = 'python /home/pi/TFE/python/motion_detection/motion_detector.py -c /home/pi/TFE/python/motion_detection/conf.json -i '+cameraID+' -t '+timeRecord+' -n '+cameraName;
     var cmdStart = 'echo "'+cronStart+cmdPython+'" > /etc/cron.d/detection';
     var cronEnd = endMinute+' '+endHour+' * * '+frequency+' pi ';
     var cmdKill = '/home/pi/TFE/killProcess.sh';
