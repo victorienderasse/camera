@@ -14,13 +14,16 @@ socket.on('timer', function(data){
     if(data.type == 'record') {
         console.log('record');
         deleteDetection();
+        deleteRecords();
         setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName);
     }else{
         console.log('detection');
         deleteRecords();
+        deleteDetection();
         setDetection(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName);
     }
 });
+
 
 socket.on('test', function(cameraID){
    console.log(cameraID);
@@ -51,7 +54,7 @@ socket.on('startDetection', function(data){
 
 socket.on('stopDetection', function(data){
     console.log('stopDetection event');
-    process.kill(data.processPID);
+    killProcess();
 });
 
 
@@ -98,10 +101,12 @@ function connectServer(){
     });
 }
 
+
 function deleteRecords(){
     const cmdRecord = "echo '' > /etc/cron.d/record";
     exec(cmdRecord, function(error, stdout, stderr) { if(error){ throw error; } });
 }
+
 
 function deleteDetection(){
     const cmdDetection = 'echo "" > /etc/cron.d/detection';
@@ -116,11 +121,7 @@ function setDetection(beginHour, beginMinute, endHour, endMinute, frequency, cam
     var cronStart = beginMinute+' '+beginHour+' * * '+frequency+' pi ';
     var cmdPython = 'python /home/pi/TFE/python/motion_detection/motion_detector.py -c /home/pi/TFE/python/motion_detection/conf.json -i '+cameraID+' -t '+timeRecord+' -n '+cameraName;
     var cmdStart = 'echo "'+cronStart+cmdPython+'" > /etc/cron.d/detection';
-    var cronEnd = endMinute+' '+endHour+' * * '+frequency+' pi ';
-    var cmdKill = '/home/pi/TFE/killProcess.sh';
-    var cmdEnd = 'echo "'+cronEnd+cmdKill+'" >> /etc/cron.d/detection';
     exec(cmdStart, function(error, stdout, stderr){ if(error){ throw error; } });
-    exec(cmdEnd, function(error, stdout, stderr){ if(error){ throw error; } });
 }
 
 
@@ -132,7 +133,6 @@ function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraN
     var cron = beginMinute+" "+beginHour+" * * "+frequency+" pi ";
     var cmdPython = "python /home/pi/TFE/python/record/record.py -c /home/pi/TFE/python/record/conf.json -t "+timeRecord+" -n "+cameraName;
     var cmd = "echo '"+cron+cmdPython+"' > /etc/cron.d/record";
-    console.log(cmd);
     exec(cmd, function(error, stdout, stderr) { if(error){ throw error; } });
 }
 
