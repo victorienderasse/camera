@@ -91,7 +91,7 @@ socket.on('startLiveRecording', function(data){
                 throw error;
             }
         });
-    },1000);
+    },500);
 });
 
 
@@ -106,7 +106,7 @@ socket.on('getLiveRecording', function(data){
                 throw error;
             }
         });
-    },1000);
+    },500);
 });
 
 //Functions-----------------------------
