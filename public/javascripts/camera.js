@@ -61,8 +61,7 @@ socket.on('stopDetection', function(data){
 
 socket.on('startStream', function(data){
     console.log('startStream event');
-
-    //killProcess();
+    stopProcess();
     deleteRecords();
     deleteDetection();
     console.log('start stream');
@@ -82,18 +81,9 @@ socket.on('startStream', function(data){
 });
 
 
-socket.on('stopStream', function(data){
+socket.on('stopProcess', function(data){
     console.log('stopStream event');
-    //process.kill(data.processPID);
-    //killProcess();
-    console.log('pid before : '+processID);
-    if(processID != null){
-        process.kill(processID.pid);
-        processID = null;
-        console.log('pid after : '+processID);
-    }else{
-        console.log('no spawn.pid');
-    }
+    stopProcess();
 });
 
 
@@ -147,6 +137,16 @@ socket.on('getLiveRecording', function(data){
 });
 
 //Functions-----------------------------
+
+function stopProcess{
+    if(processID != null){
+        process.kill(processID.pid);
+        processID = null;
+        console.log('process killed');
+    }else{
+        console.log('no process running');
+    }
+}
 
 
 function killProcess(){
