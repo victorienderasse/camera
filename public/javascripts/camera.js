@@ -4,7 +4,7 @@
 //var socket = io.connect('http://localhost:3000') ;
 const exec = require('child_process').exec;
 const spawn = require('child_process').spawn;
-var processID;
+var processID = null;
 
 connectServer();
 
@@ -61,11 +61,7 @@ socket.on('stopDetection', function(data){
 
 socket.on('startStream', function(data){
     console.log('startStream event');
-    if(spawn.pid){
-        console.log('before : '+spawn.pid);
-        spawn.kill(spawn.pid);
-        console.log('after : '+spawn.pid);
-    }
+
     //killProcess();
     deleteRecords();
     deleteDetection();
@@ -80,9 +76,9 @@ socket.on('startStream', function(data){
         data.cameraID
     ];
     setTimeout(function(){
-        spawn("python",args);
+        processID = spawn("python",args);
+        console.log('processID : '+processID);
     },500);
-    //setTimeout(function(){ spawn("python", ["/home/pi/TFE/python/liveStream/liveStream.py", "--name", data.name, "--record", "False", "--id", data.cameraID]); },1000);
 });
 
 
@@ -90,10 +86,11 @@ socket.on('stopStream', function(data){
     console.log('stopStream event');
     //process.kill(data.processPID);
     //killProcess();
-    console.log('pid before : '+spawn.pid);
-    if(spawn.pid){
-        spawn.kill(spawn.pid);
-        console.log('pid after : '+spawn.pid);
+    console.log('pid before : '+processID);
+    if(processID != null){
+        spawn.kill(processID);
+        processID = null;
+        console.log('pid after : '+processID);
     }else{
         console.log('no spawn.pid');
     }
