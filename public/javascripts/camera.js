@@ -88,7 +88,7 @@ socket.on('stopStream', function(data){
     //killProcess();
     console.log('pid before : '+processID);
     if(processID != null){
-        spawn.kill(processID.pid);
+        process.kill(processID.pid);
         processID = null;
         console.log('pid after : '+processID);
     }else{
