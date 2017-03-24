@@ -99,11 +99,11 @@ socket.on('getLiveRecording', function(data){
     console.log('getLiveRecording');
     killProcess();
     //Do the stuff to get the live record
-    const cmd = 'python /home/pi/TFE/python/convertSend/convertSend.py --id '+data.cameraID+' --name'+data.name;
+    const cmd = 'python /home/pi/TFE/python/convertSend/convertSend.py --id '+data.cameraID+' --name '+data.name;
     setTimeout(function(){
         exec(cmd, function(error, stdout, stderr){
             if(error){
-                throw err;
+                throw error;
             }
         });
     },1000);
