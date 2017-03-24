@@ -88,7 +88,7 @@ socket.on('startLiveRecording', function(data){
     setTimeout(function(){
         exec(cmd, function(error, stdout, stderr){
             if(error){
-                throw err;
+                throw error;
             }
         });
     },1000);
