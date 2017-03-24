@@ -73,7 +73,7 @@ socket.on('startStream', function(data){
     deleteDetection();
     console.log('start stream');
     var args = [
-        "/home/pi/TFE/python/liveStream/liveStream.py",
+        path+"/liveStream/liveStream.py",
         "--name",
         data.name,
         "--record",
@@ -83,7 +83,6 @@ socket.on('startStream', function(data){
     ];
     setTimeout(function(){
         processID = spawn("python",args);
-        console.log('processID : '+processID.pid);
     },500);
 });
 
@@ -103,7 +102,7 @@ socket.on('startLiveRecording', function(data){
     console.log('startLiveRecording');
     killProcess();
     var args = [
-        "home/pi/TFE/python/liveStream/liveStream.py",
+        path+"/liveStream/liveStream.py",
         "--name",
         data.name,
         "--id",
@@ -112,7 +111,9 @@ socket.on('startLiveRecording', function(data){
         "True"
     ];
     setTimeout(function(){
+        console.log('exec cmd');
         processID = spawn("python", args);
+        console.log('done');
     },500);
 });
 
@@ -121,7 +122,7 @@ socket.on('getLiveRecording', function(data){
     console.log('getLiveRecording');
     killProcess();
     var args = [
-        "/home/pi/TFE/python/convertSend/convertSend.py",
+        path+"/convertSend/convertSend.py",
         "--id",
         data.cameraID,
         "--name",
