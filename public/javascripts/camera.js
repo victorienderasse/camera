@@ -77,7 +77,7 @@ socket.on('startStream', function(data){
     ];
     setTimeout(function(){
         processID = spawn("python",args);
-        console.log('processID : '+processID);
+        console.log('processID : '+processID.pid);
     },500);
 });
 
