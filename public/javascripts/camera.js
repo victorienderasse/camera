@@ -58,14 +58,14 @@ socket.on('stopDetection', function(data){
 });
 
 
-socket.on('startStream', function(cameraID){
+socket.on('startStream', function(data){
     console.log('startStream event');
     killProcess();
     deleteRecords();
     deleteDetection();
     console.log('start stream');
-    const startStream = "python /home/pi/TFE/python/liveStream/liveStream.py --record False --id "+cameraID;
-    setTimeout(function(){ spawn("python", ["/home/pi/TFE/python/liveStream/liveStream.py", "--record", "False", "--id", cameraID]); },1000);
+    const startStream = "python /home/pi/TFE/python/liveStream/liveStream.py --record False --id "+data.cameraID;
+    setTimeout(function(){ spawn("python", ["/home/pi/TFE/python/liveStream/liveStream.py", "--name", data.name, "--record", "False", "--id", data.cameraID]); },1000);
 });
 
 
@@ -81,10 +81,10 @@ socket.on('killProcess', function(){
 });
 
 
-socket.on('startLiveRecording', function(cameraID){
+socket.on('startLiveRecording', function(data){
     console.log('startLiveRecording');
     killProcess();
-    const cmd = 'python /home/pi/TFE/python/liveStream/liveStream.py --record True --id '+cameraID;
+    const cmd = 'python /home/pi/TFE/python/liveStream/liveStream.py --record True --name '+data.name+' --id '+data.cameraID;
     setTimeout(function(){
         exec(cmd, function(error, stdout, stderr){
             if(error){
@@ -95,11 +95,18 @@ socket.on('startLiveRecording', function(cameraID){
 });
 
 
-socket.on('getLiveRecording', function(cameraID){
+socket.on('getLiveRecording', function(data){
     console.log('getLiveRecording');
     killProcess();
     //Do the stuff to get the live record
-
+    const cmd = 'python /home/pi/TFE/python/convertSend/convertSend.py --id '+data.cameraID+' --name'+data.name;
+    setTimeout(function(){
+        exec(cmd, function(error, stdout, stderr){
+            if(error){
+                throw err;
+            }
+        });
+    },1000);
 });
 
 //Functions-----------------------------
