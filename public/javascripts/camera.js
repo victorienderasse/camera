@@ -138,7 +138,7 @@ socket.on('getLiveRecording', function(data){
 
 //Functions-----------------------------
 
-function stopProcess{
+function stopProcess(){
     if(processID != null){
         process.kill(processID.pid);
         processID = null;
