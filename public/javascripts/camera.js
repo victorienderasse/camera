@@ -5,6 +5,7 @@
 const exec = require('child_process').exec;
 const spawn = require('child_process').spawn;
 var processID = null;
+const path = "/home/pi/TFE/python";
 
 connectServer();
 
@@ -48,20 +49,26 @@ socket.on('startDetection', function(data){
     killProcess();
     deleteRecords();
     deleteDetection();
-    //Settimout pour éviter de kill notre nouveau process
-    setTimeout(function(){ spawn("python", ["/home/pi/TFE/python/motion_detection/motion_detector.py", "-c", "/home/pi/TFE/python/motion_detection/conf.json", "-i", data.cameraID, "-t", "0", "-n", data.cameraName]); },1000)
-});
-
-
-socket.on('stopDetection', function(data){
-    console.log('stopDetection event');
-    killProcess();
+    var args = [
+        path+"/motion_detection/motion_detector.py",
+        "-c",
+        path+"/motion_detection/conf.json",
+        "--id",
+        data.cameraID,
+        "--name",
+        data.name,
+        "-t",
+        "0"
+    ];
+    setTimeout(function(){
+        processID = spawn("python",args);
+    },500);
 });
 
 
 socket.on('startStream', function(data){
     console.log('startStream event');
-    stopProcess();
+    killProcess();
     deleteRecords();
     deleteDetection();
     console.log('start stream');
@@ -83,7 +90,7 @@ socket.on('startStream', function(data){
 
 socket.on('stopProcess', function(data){
     console.log('stopStream event');
-    stopProcess();
+    killProcess();
 });
 
 
@@ -95,8 +102,7 @@ socket.on('killProcess', function(){
 socket.on('startLiveRecording', function(data){
     console.log('startLiveRecording');
     killProcess();
-    exec.pi
-    args = [
+    var args = [
         "home/pi/TFE/python/liveStream/liveStream.py",
         "--name",
         data.name,
@@ -106,33 +112,23 @@ socket.on('startLiveRecording', function(data){
         "True"
     ];
     setTimeout(function(){
-        spawn("python", args);
+        processID = spawn("python", args);
     },500);
-    /*
-    const cmd = 'python /home/pi/TFE/python/liveStream/liveStream.py --record True --name '+data.name+' --id '+data.cameraID;
-    setTimeout(function(){
-        exec(cmd, function(error, stdout, stderr){
-            if(error){
-                throw error;
-            }
-        });
-    },500);
-    */
 });
 
 
 socket.on('getLiveRecording', function(data){
     console.log('getLiveRecording');
     killProcess();
-
-    //Do the stuff to get the live record
-    const cmd = 'python /home/pi/TFE/python/convertSend/convertSend.py --id '+data.cameraID+' --name '+data.name;
+    var args = [
+        "/home/pi/TFE/python/convertSend/convertSend.py",
+        "--id",
+        data.cameraID,
+        "--name",
+        data.name
+    ];
     setTimeout(function(){
-        exec(cmd, function(error, stdout, stderr){
-            if(error){
-                throw error;
-            }
-        });
+        processID = spawn("python", args);
     },500);
 });
 
