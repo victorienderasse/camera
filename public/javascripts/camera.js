@@ -82,9 +82,19 @@ socket.on('startStream', function(data){
         "--id",
         data.cameraID
     ];
-    setTimeout(function(){
-        processID = spawn("python",args);
-    },500);
+
+    var interval = setInterval(function(){
+        if(killDone){
+            processID = spawn("python",args);
+            clearInterval(interval);
+            console.log('done');
+        }
+        console.log('not yet');
+    },1);
+
+    //setTimeout(function(){
+        //processID = spawn("python",args);
+    //},500);
 });
 
 
@@ -151,6 +161,7 @@ function killProcess(){
     console.log('killProcess function');
     var test = spawn('/home/pi/TFE/killProcess.sh');
     test.on('exit',function(){
+        killDone = true;
         console.log('killProcess end kill done : '+killDone);
     });
 }
