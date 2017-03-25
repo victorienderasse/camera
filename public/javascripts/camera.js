@@ -6,6 +6,7 @@ const exec = require('child_process').exec;
 const spawn = require('child_process').spawn;
 var processID = null;
 const path = "/home/pi/TFE/python";
+var killDone = false;
 
 connectServer();
 
@@ -148,7 +149,10 @@ function stopProcess(){
 
 function killProcess(){
     console.log('killProcess function');
-    spawn('/home/pi/TFE/killProcess.sh');
+    var test = spawn('/home/pi/TFE/killProcess.sh');
+    test.on('close',function(){
+        console.log('killProcess end');
+    });
 }
 
 
