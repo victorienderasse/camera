@@ -6,7 +6,7 @@ const exec = require('child_process').exec;
 const spawn = require('child_process').spawn;
 var processID = null;
 const path = "/home/pi/TFE/python";
-var killDone = false;
+var killProcessDone = false;
 
 connectServer();
 
@@ -61,9 +61,7 @@ socket.on('startDetection', function(data){
         "-t",
         "0"
     ];
-    setTimeout(function(){
-        processID = spawn("python",args);
-    },500);
+    execCmd(args);
 });
 
 
@@ -82,19 +80,7 @@ socket.on('startStream', function(data){
         "--id",
         data.cameraID
     ];
-
-    var interval = setInterval(function(){
-        if(killDone){
-            processID = spawn("python",args);
-            clearInterval(interval);
-            console.log('done');
-        }
-        console.log('not yet');
-    },1);
-
-    //setTimeout(function(){
-        //processID = spawn("python",args);
-    //},500);
+    execCmd(args);
 });
 
 
@@ -121,11 +107,7 @@ socket.on('startLiveRecording', function(data){
         "--record",
         "True"
     ];
-    setTimeout(function(){
-        console.log('exec cmd');
-        processID = spawn("python", args);
-        console.log('done');
-    },500);
+    execCmd(args);
 });
 
 
@@ -139,9 +121,7 @@ socket.on('getLiveRecording', function(data){
         "--name",
         data.name
     ];
-    setTimeout(function(){
-        processID = spawn("python", args);
-    },500);
+    execCmd(args);
 });
 
 //Functions-----------------------------
@@ -154,6 +134,17 @@ function stopProcess(){
     }else{
         console.log('no process running');
     }
+}
+
+
+function execCmd(args){
+    var interval = setInterval(function(){
+        if(killProcessDone){
+            processID = spawn("python",args);
+            clearInterval(interval);
+            killProcessDone = false;
+        }
+    },1);
 }
 
 
