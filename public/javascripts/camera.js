@@ -28,17 +28,6 @@ socket.on('timer', function(data){
 });
 
 
-socket.on('test', function(cameraID){
-   console.log(cameraID);
-});
-
-
-socket.on('stopProcess', function(data){
-    console.log('stopStream event');
-    killProcess();
-});
-
-
 socket.on('killProcess', function(){
     killProcess();
 });
@@ -58,9 +47,8 @@ socket.on('deleteDetection', function(){
 
 socket.on('startDetection', function(data){
     console.log('startDetection event');
-    killProcess();
-    deleteRecords();
     deleteDetection();
+    deleteRecords();
     var args = [
         path+"/motion_detection/motion_detector.py",
         "-c",
@@ -78,9 +66,8 @@ socket.on('startDetection', function(data){
 
 socket.on('startStream', function(data){
     console.log('startStream event');
-    killProcess();
-    deleteRecords();
     deleteDetection();
+    deleteRecords();
     var args = [
         path+"/liveStream/liveStream.py",
         "--name",
@@ -96,7 +83,6 @@ socket.on('startStream', function(data){
 
 socket.on('startLiveRecording', function(data){
     console.log('startLiveRecording');
-    killProcess();
     var args = [
         path+"/liveStream/liveStream.py",
         "--name",
@@ -112,7 +98,6 @@ socket.on('startLiveRecording', function(data){
 
 socket.on('getLiveRecording', function(data){
     console.log('getLiveRecording');
-    killProcess();
     var args = [
         path+"/convertSend/convertSend.py",
         "--id",
@@ -138,6 +123,13 @@ function stopProcess(){
 
 function execCmd(args){
     console.log('execCmd');
+    var kill = spawn('/home/pi/TFE/killProcess.sh');
+    kill.on('exit',function(){
+        console.log('kill');
+        processID = spawn("python",args);
+    });
+
+    /*
     var interval = setInterval(function(){
         if(killProcessDone){
             console.log('exec');
@@ -148,6 +140,7 @@ function execCmd(args){
             console.log('wait');
         }
     },1);
+    */
 }
 
 
@@ -192,6 +185,18 @@ function setDetection(beginHour, beginMinute, endHour, endMinute, frequency, cam
     var cmdPython = 'python /home/pi/TFE/python/motion_detection/motion_detector.py -c /home/pi/TFE/python/motion_detection/conf.json -i '+cameraID+' -t '+timeRecord+' -n '+cameraName;
     var cmdStart = 'echo "'+cronStart+cmdPython+'" > /etc/cron.d/detection';
     exec(cmdStart, function(error, stdout, stderr){ if(error){ throw error; } });
+    /*
+    Create file (touch)
+    write in file (echo)
+    Several file allowed
+    To delete just delete the file
+
+    var createFile = spawn('touch',['/etc/cron.d/detection/record'+recordID]);
+    createFile.on('exit',function(){
+        var writeData = spawn('echo',[cronStart,cmdPython,'>','/etc/cron.d/detection/record'+recordID]);
+    });
+
+     */
 }
 
 
