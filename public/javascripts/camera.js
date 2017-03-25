@@ -70,7 +70,6 @@ socket.on('startStream', function(data){
     killProcess();
     deleteRecords();
     deleteDetection();
-    console.log('start stream');
     var args = [
         path+"/liveStream/liveStream.py",
         "--name",
@@ -138,8 +137,10 @@ function stopProcess(){
 
 
 function execCmd(args){
+    console.log('execCmd');
     var interval = setInterval(function(){
         if(killProcessDone){
+            console.log('exec');
             processID = spawn("python",args);
             clearInterval(interval);
             killProcessDone = false;
@@ -152,8 +153,8 @@ function killProcess(){
     console.log('killProcess function');
     var test = spawn('/home/pi/TFE/killProcess.sh');
     test.on('exit',function(){
-        killDone = true;
-        console.log('killProcess end kill done : '+killDone);
+        console.log('killProcessDone');
+        killProcessDone = true;
     });
 }
 
