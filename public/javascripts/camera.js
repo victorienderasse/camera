@@ -33,6 +33,17 @@ socket.on('test', function(cameraID){
 });
 
 
+socket.on('stopProcess', function(data){
+    console.log('stopStream event');
+    killProcess();
+});
+
+
+socket.on('killProcess', function(){
+    killProcess();
+});
+
+
 socket.on('deleteRecord',function(){
     console.log('delete record event');
     deleteRecords();
@@ -80,17 +91,6 @@ socket.on('startStream', function(data){
         data.cameraID
     ];
     execCmd(args);
-});
-
-
-socket.on('stopProcess', function(data){
-    console.log('stopStream event');
-    killProcess();
-});
-
-
-socket.on('killProcess', function(){
-    killProcess();
 });
 
 
@@ -144,6 +144,8 @@ function execCmd(args){
             processID = spawn("python",args);
             clearInterval(interval);
             killProcessDone = false;
+        }else{
+            console.log('wait');
         }
     },1);
 }
