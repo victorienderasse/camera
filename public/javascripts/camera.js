@@ -150,7 +150,7 @@ function stopProcess(){
 function killProcess(){
     console.log('killProcess function');
     var test = spawn('/home/pi/TFE/killProcess.sh');
-    test.on('close',function(){
+    test.on('exit',function(){
         console.log('killProcess end');
     });
 }
