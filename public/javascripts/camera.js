@@ -83,6 +83,7 @@ socket.on('startStream', function(data){
 
 socket.on('startLiveRecording', function(data){
     console.log('startLiveRecording');
+    console.log(data.name);
     var args = [
         path+"/liveStream/liveStream.py",
         "--name",
@@ -128,7 +129,7 @@ function execCmd(args){
     setTimeout(function(){
         spawn('python',args);
     },1000);
-    
+
     /*
     var kill = spawn('/home/pi/TFE/killProcess.sh');
     kill.on('close',function(){
