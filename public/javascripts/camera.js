@@ -127,6 +127,7 @@ function execCmd(args){
     kill.on('exit',function(){
         console.log('kill');
         var Process = spawn("python",args);
+        console.log('process started');
         Process.on('exit',function(){
             console.log('process closed');
         });
