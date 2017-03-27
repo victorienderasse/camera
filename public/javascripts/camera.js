@@ -126,13 +126,11 @@ function execCmd(args){
 
     if(processID){
         console.log('processID exists');
-        var killingProcess = child_process.kill(processID.pid);
-        killingProcess.on('close',function(){
-            processID = spawn("python",args);
-            processID.on('close',function(){
-                console.log('processID closed');
-                processID = null;
-            });
+        child_process.kill(processID.pid);
+        processID = spawn("python",args);
+        processID.on('close',function(){
+            console.log('processID closed');
+            processID = null;
         });
     }else{
         processID = spawn("python",args);
