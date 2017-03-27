@@ -124,23 +124,11 @@ function stopProcess(){
 function execCmd(args){
     console.log('execCmd');
 
-    if(processID){
-        console.log('processID exists');
-        child_process.kill(processID.pid);
-        processID = spawn("python",args);
-        processID.on('close',function(){
-            console.log('processID closed');
-            processID = null;
-        });
-    }else{
-        processID = spawn("python",args);
-        processID.on('close',function(){
-            console.log('processID closed');
-            processID = null;
-        });
-    }
-
-
+    killProcess();
+    setTimeout(function(){
+        spawn('python',args);
+    },1000);
+    
     /*
     var kill = spawn('/home/pi/TFE/killProcess.sh');
     kill.on('close',function(){
@@ -171,10 +159,7 @@ function execCmd(args){
 function killProcess(){
     console.log('killProcess function');
 
-    if(processID){
-        child_process.kill(processID.pid);
-        processID = null;
-    }
+    spawn('/home/pi/TFE/killProcess.sh');
 
     /*
     var test = spawn('/home/pi/TFE/killProcess.sh');
