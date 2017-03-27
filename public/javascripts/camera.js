@@ -124,7 +124,7 @@ function stopProcess(){
 function execCmd(args){
     console.log('execCmd');
     var kill = spawn('/home/pi/TFE/killProcess.sh');
-    kill.on('exit',function(){
+    kill.on('close',function(){
         console.log('kill');
         var Process = spawn("python",args);
         console.log('process started');
