@@ -111,16 +111,6 @@ socket.on('getLiveRecording', function(data){
 
 //Functions-----------------------------
 
-function stopProcess(){
-    if(processID != null){
-        process.kill(processID.pid);
-        processID = null;
-        console.log('process killed');
-    }else{
-        console.log('no process running');
-    }
-}
-
 
 function execCmd(args){
     console.log('execCmd');
@@ -159,16 +149,7 @@ function execCmd(args){
 
 function killProcess(){
     console.log('killProcess function');
-
     spawn('/home/pi/TFE/killProcess.sh');
-
-    /*
-    var test = spawn('/home/pi/TFE/killProcess.sh');
-    test.on('exit',function(){
-        console.log('killProcessDone');
-        killProcessDone = true;
-    });
-    */
 }
 
 
