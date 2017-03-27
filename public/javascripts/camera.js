@@ -123,6 +123,27 @@ function stopProcess(){
 
 function execCmd(args){
     console.log('execCmd');
+
+    if(processID){
+        console.log('processID exists');
+        var killingProcess = child_process.kill(processID.pid);
+        killingProcess.on('close',function(){
+            processID = spawn("python",args);
+            processID.on('close',function(){
+                console.log('processID closed');
+                processID = null;
+            });
+        });
+    }else{
+        processID = spawn("python",args);
+        processID.on('close',function(){
+            console.log('processID closed');
+            processID = null;
+        });
+    }
+
+
+    /*
     var kill = spawn('/home/pi/TFE/killProcess.sh');
     kill.on('close',function(){
         console.log('kill');
@@ -132,6 +153,7 @@ function execCmd(args){
             console.log('process closed');
         });
     });
+    */
 
     /*
     var interval = setInterval(function(){
@@ -150,11 +172,19 @@ function execCmd(args){
 
 function killProcess(){
     console.log('killProcess function');
+
+    if(processID){
+        child_process.kill(processID.pid);
+        processID = null;
+    }
+
+    /*
     var test = spawn('/home/pi/TFE/killProcess.sh');
     test.on('exit',function(){
         console.log('killProcessDone');
         killProcessDone = true;
     });
+    */
 }
 
 
