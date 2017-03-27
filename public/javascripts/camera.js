@@ -126,7 +126,10 @@ function execCmd(args){
     var kill = spawn('/home/pi/TFE/killProcess.sh');
     kill.on('exit',function(){
         console.log('kill');
-        processID = spawn("python",args);
+        var Process = spawn("python",args);
+        Process.on('exit',function(){
+            console.log('process closed');
+        });
     });
 
     /*
