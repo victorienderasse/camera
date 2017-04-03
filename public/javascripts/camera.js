@@ -42,7 +42,7 @@ socket.on('timer', function(data){
     }
     var cmd = 'echo "'+cron+cmdPython+'" > /etc/cron.d/record'+data.recordID;
     console.log(cmd);
-    //exec(cmd, function(err){ if(err){ throw err;  } });
+    exec(cmd, function(err){ if(err){ throw err;  } });
 
 });
 
