@@ -14,17 +14,36 @@ connectServer();
 
 socket.on('timer', function(data){
     console.log("timer event");
-    if(data.type == 'record') {
-        console.log('record');
-        deleteDetection();
-        deleteRecords();
-        setTimer(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName);
+
+    var begin, end, timeRecord;
+
+    if(data.frequency != '*'){
+        begin = (parseInt(data.frequency)*24*60*60)+(parseInt(data.begin_hour)*60*60)+(parseInt(data.begin_minute)*60);
+        end = (parseInt(data.frequencyEnd)*24*60*60)+(parseInt(data.end_hour)*60*60)+(parseInt(data.end_minute)*60);
+        if(begin > end){
+            end = end + 604800; //1 week = 604800 sec
+        }
     }else{
-        console.log('detection');
-        deleteRecords();
-        deleteDetection();
-        setDetection(data.begin_hour, data.begin_minute, data.end_hour, data.end_minute, data.frequency, data.cameraName);
+        begin = (parseInt(data.begin_hour)*60*60)+(parseInt(data.begin_minute)*60);
+        end = (parseInt(data.end_hour)*60*60)+(parseInt(data.end_minute)*60);
+        if(begin > end){
+            end = end + 86400; //1 day = 86400 sec
+        }
     }
+
+    timeRecord = end - begin;
+
+    var cmdPython;
+    var cron = data.begin_minute+' '+data.begin_hour+' * * '+data.frequency+' pi ';
+    if(data.type == 'record'){
+        cmdPython = path+'/record/record.py --conf '+path+'/record/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
+    }else{
+        cmdPython = path+'/motion_detection/motion_detector.py --conf '+path+'/motion_detection/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
+    }
+    var cmd = 'echo "'+cron+cmdPython+'" > /etc/cron.d/record'+data.recordID;
+    console.log(cmd);
+    //exec(cmd, function(err){ if(err){ throw err;  } });
+
 });
 
 
@@ -190,10 +209,8 @@ function setDetection(beginHour, beginMinute, endHour, endMinute, frequency, cam
     Several file allowed
     To delete just delete the file
 
-    var createFile = spawn('touch',['/etc/cron.d/detection/record'+recordID]);
-    createFile.on('exit',function(){
-        var writeData = spawn('echo',[cronStart,cmdPython,'>','/etc/cron.d/detection/record'+recordID]);
-    });
+    > var writeData = spawn('echo',[cronStart,cmdPython,'>','/etc/cron.d/detection/record'+recordID]);
+
 
      */
 }
