@@ -52,9 +52,9 @@ socket.on('killProcess', function(){
 });
 
 
-socket.on('deleteRecord',function(){
+socket.on('deleteRecord',function(recordID){
     console.log('delete record event');
-    deleteRecords();
+    deleteRecords(recordID);
 });
 
 
@@ -183,9 +183,13 @@ function connectServer(){
 }
 
 
-function deleteRecords(){
-    const cmdRecord = "echo '' > /etc/cron.d/record";
-    exec(cmdRecord, function(error, stdout, stderr) { if(error){ throw error; } });
+function deleteRecords(recordID){
+    const deleteRecord = 'rm /etc/cron.d/record'+recordID;
+    exec(deleteRecord, function(err){
+        if(err){
+            throw err;
+        }
+    });
 }
 
 
