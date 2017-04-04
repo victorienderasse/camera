@@ -144,7 +144,6 @@ function execCmd(args){
 function killProcess(){
     console.log('killProcess function');
     spawn('/home/pi/TFE/killProcess.sh');
-    spawn('rm /home/pi/TFE/replays/*');
 }
 
 
