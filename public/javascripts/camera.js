@@ -41,7 +41,6 @@ socket.on('timer', function(data){
         cmdPython = path+'/motion_detection/motion_detector.py --conf '+path+'/motion_detection/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
     }
     var cmd = 'echo "'+cron+cmdPython+'" > /etc/cron.d/record'+data.recordID;
-    console.log(cmd);
     exec(cmd, function(err){ if(err){ throw err;  } });
 
 });
