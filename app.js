@@ -34,7 +34,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-socket = require('socket.io-client')('http://victorienderasse.be:3000');
+socket = require('socket.io-client')('http://192.168.1.50:3000');
 //var socket = io.connect('http://localhost:3000');
 socket.on('connect', function () {
   require('./public/javascripts/camera.js');
