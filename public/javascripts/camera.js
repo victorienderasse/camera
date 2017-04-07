@@ -57,16 +57,8 @@ socket.on('deleteRecord',function(recordID){
 });
 
 
-socket.on('deleteDetection', function(){
-    console.log('deleteDetection event');
-    deleteDetection();
-});
-
-
 socket.on('startDetection', function(data){
     console.log('startDetection event');
-    deleteDetection();
-    deleteRecords();
     var args = [
         path+"/motion_detection/motion_detector.py",
         "-c",
@@ -166,43 +158,5 @@ function deleteRecords(recordID){
     });
 }
 
-
-function deleteDetection(){
-    const cmdDetection = 'echo "" > /etc/cron.d/detection';
-    exec(cmdDetection, function(error, stdout, stderr){ if(error){ throw error; } });
-}
-
-
-function setDetection(beginHour, beginMinute, endHour, endMinute, frequency, cameraName, cameraID){
-    console.log('setDetection function');
-    //get time to record
-    var timeRecord = (((endHour*3600)+(endMinute*60))-((beginHour*3600)+(beginMinute*60)));
-    var cronStart = beginMinute+' '+beginHour+' * * '+frequency+' pi ';
-    var cmdPython = 'python /home/pi/TFE/python/motion_detection/motion_detector.py -c /home/pi/TFE/python/motion_detection/conf.json -i '+cameraID+' -t '+timeRecord+' -n '+cameraName;
-    var cmdStart = 'echo "'+cronStart+cmdPython+'" > /etc/cron.d/detection';
-    exec(cmdStart, function(error, stdout, stderr){ if(error){ throw error; } });
-    /*
-    Create file (touch)
-    write in file (echo)
-    Several file allowed
-    To delete just delete the file
-
-    > var writeData = spawn('echo',[cronStart,cmdPython,'>','/etc/cron.d/detection/record'+recordID]);
-
-
-     */
-}
-
-
-function setTimer(beginHour, beginMinute, endHour, endMinute, frequency, cameraName){
-    console.log('setTimer function');
-    //get time to record
-    var timeRecord = (((endHour*3600)+(endMinute*60))-((beginHour*3600)+(beginMinute*60)));
-    //cron cmd
-    var cron = beginMinute+" "+beginHour+" * * "+frequency+" pi ";
-    var cmdPython = "python /home/pi/TFE/python/record/record.py -c /home/pi/TFE/python/record/conf.json -t "+timeRecord+" -n "+cameraName;
-    var cmd = "echo '"+cron+cmdPython+"' > /etc/cron.d/record";
-    exec(cmd, function(error, stdout, stderr) { if(error){ throw error; } });
-}
 
 
