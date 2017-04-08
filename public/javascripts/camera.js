@@ -1,7 +1,7 @@
 /**
  * Created by Victorien on 24-06-16.
  */
-//var socket = io.connect('http://localhost:3000') ;
+
 const exec = require('child_process').exec;
 const spawn = require('child_process').spawn;
 var processID = null;
@@ -116,6 +116,11 @@ socket.on('getLiveRecording', function(data){
         data.name
     ];
     execCmd(args);
+});
+
+
+socket.on('getConfig', function(){
+    
 });
 
 //Functions-----------------------------
