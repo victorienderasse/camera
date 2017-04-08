@@ -5,9 +5,13 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const http = require('http');
+const exec = require('child_process').exec;
+const spawn = require('child_process').spawn;
+const fs = require('fs');
 
 const app = express();
 const port = 8081;
+const pathPython = "/home/pi/TFE/python";
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,15 +39,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 socket = require('socket.io-client')('http://192.168.1.50:3000');
-//var socket = io.connect('http://localhost:3000');
-socket.on('connect', function () {
-  //require('./public/javascripts/camera.js');
 
-  const exec = require('child_process').exec;
-  const spawn = require('child_process').spawn;
-  var processID = null;
-  const path = "/home/pi/TFE/python";
-  var killProcessDone = false;
+
+socket.on('connect', function () {
+
 
   connectServer();
 
@@ -73,9 +72,9 @@ socket.on('connect', function () {
     var cmdPython;
     var cron = data.begin_minute+' '+data.begin_hour+' * * '+data.frequency+' pi ';
     if(data.type == 'record'){
-      cmdPython = path+'/record/record.py --conf '+path+'/record/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
+      cmdPython = pathPython+'/record/record.py --conf '+pathPython+'/record/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
     }else{
-      cmdPython = path+'/motion_detection/motion_detector.py --conf '+path+'/motion_detection/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
+      cmdPython = pathPython+'/motion_detection/motion_detector.py --conf '+pathPython+'/motion_detection/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
     }
     var cmd = 'echo "'+cron+cmdPython+'" > /etc/cron.d/record'+data.recordID;
     exec(cmd, function(err){ if(err){ throw err;  } });
@@ -97,9 +96,9 @@ socket.on('connect', function () {
   socket.on('startDetection', function(data){
     console.log('startDetection event');
     var args = [
-      path+"/motion_detection/motion_detector.py",
+      pathPython+"/motion_detection/motion_detector.py",
       "-c",
-      path+"/motion_detection/conf.json",
+      pathPython+"/motion_detection/conf.json",
       "--id",
       data.cameraID,
       "--name",
@@ -115,7 +114,7 @@ socket.on('connect', function () {
     console.log('startStream event');
 
     var args = [
-      path+"/liveStream/liveStream.py",
+      pathPython+"/liveStream/liveStream.py",
       "--name",
       data.name,
       "--record",
@@ -131,7 +130,7 @@ socket.on('connect', function () {
     console.log('startLiveRecording');
     console.log(data.name);
     var args = [
-      path+"/liveStream/liveStream.py",
+      pathPython+"/liveStream/liveStream.py",
       "--name",
       data.name,
       "--id",
@@ -146,7 +145,7 @@ socket.on('connect', function () {
   socket.on('getLiveRecording', function(data){
     console.log('getLiveRecording');
     var args = [
-      path+"/convertSend/convertSend.py",
+      pathPython+"/convertSend/convertSend.py",
       "--id",
       data.cameraID,
       "--name",
@@ -156,8 +155,12 @@ socket.on('connect', function () {
   });
 
 
-  socket.on('getConfig', function(){
-
+  socket.on('getConfig', function(cameraID){
+    fs.readFile('../../python/conf.json', function(err,data){
+      if(err) throw err;
+      var conf = JSON.parse(data);
+      socket.emit('setConfig',{cameraID:cameraID, conf:conf});
+    })
   });
 
 //Functions-----------------------------
@@ -203,7 +206,5 @@ socket.on('connect', function () {
 
 
 });
-
-//require('./routes/index.js')(app);
 
 module.exports = app;
