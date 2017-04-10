@@ -69,43 +69,19 @@ socket.on('connect', function () {
 
     timeRecord = end - begin;
 
-    var cmdPython, type;
     var cron = data.begin_minute+' '+data.begin_hour+' * * '+data.frequency+' pi ';
+
+    var type;
     if(data.type == 'record'){
       type = pathPython+'/record/record.py';
-      cmdPython = pathPython+'/record/record.py --conf '+pathPython+'/record/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
     }else{
       type = pathPython+'/motion_detection/motion_detector.py';
-      cmdPython = pathPython+'/motion_detection/motion_detector.py --conf '+pathPython+'/motion_detection/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
     }
 
-    var args = [
-        cron,
-        type,
-        '--name',
-        data.cameraName,
-        '--id',
-        data.cameraID,
-        '--time',
-        timeRecord,
-        '--once',
-        data.once,
-        '--recordID',
-        data.recordID,
-        '--resolution',
-        data.resolution,
-        '--fps',
-        data.fps,
-        '--brightness',
-        data.brightness,
-        '--contrast',
-        data.contrast
-    ];
-
-    spawn('echo',args);
+    var cmdPython = pathPython+'/'+type+' --conf '+pathPython+'/record/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID+' --resolution '+data.resolution+' --fps '+data.fps+' --brightness '+data.brightness+' --contrast '+data.contrast;
 
     var cmd = 'echo "'+cron+cmdPython+'" > /etc/cron.d/record'+data.recordID;
-    //exec(cmd, function(err){ if(err){ throw err;  } });
+    exec(cmd, function(err){ if(err){ throw err;  } });
 
   });
 
@@ -132,7 +108,15 @@ socket.on('connect', function () {
       "--name",
       data.name,
       "-t",
-      "0"
+      "0",
+      '--resolution',
+      data.resolution,
+      '--fps',
+      data.fps,
+      '--brightness',
+      data.brightness,
+      '--contrast',
+      data.contrast
     ];
     execCmd(args);
   });
@@ -148,7 +132,15 @@ socket.on('connect', function () {
       "--record",
       "False",
       "--id",
-      data.cameraID
+      data.cameraID,
+      '--resolution',
+      data.resolution,
+      '--fps',
+      data.fps,
+      '--brightness',
+      data.brightness,
+      '--contrast',
+      data.contrast
     ];
     execCmd(args);
   });
@@ -164,7 +156,15 @@ socket.on('connect', function () {
       "--id",
       data.cameraID,
       "--record",
-      "True"
+      "True",
+      '--resolution',
+      data.resolution,
+      '--fps',
+      data.fps,
+      '--brightness',
+      data.brightness,
+      '--contrast',
+      data.contrast
     ];
     execCmd(args);
   });
