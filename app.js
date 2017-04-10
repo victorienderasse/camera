@@ -155,13 +155,24 @@ socket.on('connect', function () {
   });
 
 
-  socket.on('getConfig', function(cameraID){
-    fs.readFile('../../python/conf.json', function(err,data){
-      if(err) throw err;
-      var conf = JSON.parse(data);
-      socket.emit('setConfig',{cameraID:cameraID, conf:conf});
-    })
+  socket.on('getPreview', function(data){
+    console.log('getPreview event');
+
+    var args = [
+        pathPython+'/preview/preview.py',
+        "--id",
+        data.cameraID,
+        "--resolution",
+        data.resolution,
+        "--brightness",
+        data.brightness,
+        "--contrast",
+        data.contrast
+    ];
+    spawn('python',args);
   });
+
+  
 
 //Functions-----------------------------
 
