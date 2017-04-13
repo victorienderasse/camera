@@ -73,12 +73,12 @@ socket.on('connect', function () {
 
     var type;
     if(data.type == 'record'){
-      type = pathPython+'/record/record.py';
+      type = pathPython+'/record.py';
     }else{
-      type = pathPython+'/motion_detection/motion_detector.py';
+      type = pathPython+'/motion_detector.py';
     }
 
-    var cmdPython = pathPython+'/'+type+' --conf '+pathPython+'/record/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID+' --resolution '+data.resolution+' --fps '+data.fps+' --brightness '+data.brightness+' --contrast '+data.contrast;
+    var cmdPython = pathPython+'/'+type+' --conf '+pathPython+'/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID+' --resolution '+data.resolution+' --fps '+data.fps+' --brightness '+data.brightness+' --contrast '+data.contrast;
 
     var cmd = 'echo "'+cron+cmdPython+'" > /etc/cron.d/record'+data.recordID;
     exec(cmd, function(err){ if(err){ throw err;  } });
@@ -100,9 +100,9 @@ socket.on('connect', function () {
   socket.on('startDetection', function(data){
     console.log('startDetection event');
     var args = [
-      pathPython+"/motion_detection/motion_detector.py",
+      pathPython+"/motion_detector.py",
       "-c",
-      pathPython+"/motion_detection/conf.json",
+      pathPython+"/conf.json",
       "--id",
       data.cameraID,
       "--name",
@@ -126,7 +126,7 @@ socket.on('connect', function () {
     console.log('startStream event');
 
     var args = [
-      pathPython+"/liveStream/liveStream.py",
+      pathPython+"/liveStream.py",
       "--name",
       data.name,
       "--record",
@@ -150,7 +150,7 @@ socket.on('connect', function () {
     console.log('startLiveRecording');
     console.log(data.name);
     var args = [
-      pathPython+"/liveStream/liveStream.py",
+      pathPython+"/liveStream.py",
       "--name",
       data.name,
       "--id",
@@ -173,7 +173,7 @@ socket.on('connect', function () {
   socket.on('getLiveRecording', function(data){
     console.log('getLiveRecording');
     var args = [
-      pathPython+"/convertSend/convertSend.py",
+      pathPython+"/convertSend.py",
       "--id",
       data.cameraID,
       "--name",
@@ -187,7 +187,7 @@ socket.on('connect', function () {
     console.log('getPreview event');
 
     var args = [
-        pathPython+'/preview/preview.py',
+        pathPython+'/preview.py',
         "--id",
         data.cameraID,
         "--resolution",
