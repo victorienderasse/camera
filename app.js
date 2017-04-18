@@ -38,7 +38,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-socket = require('socket.io-client')('http://192.168.1.50:3000');
+socket = require('socket.io-client')('http://192.168.1.51:3000');
 
 
 socket.on('connect', function () {
