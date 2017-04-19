@@ -201,14 +201,14 @@ socket.on('connect', function () {
   });
 
 
-  socket.on('getConfig', function(cameraID){
+  socket.on('getConfig', function(data){
     console.log('getConfig event');
     fs.readFile('../../python/conf.json', 'utf8', function(err, data){
       if(err) throw err;
       var obj = JSON.parse(data);
       socket.emit('getConfigRes', {
-        cameraID: cameraID,
-        cameraName: cameraName,
+        cameraID: data.cameraID,
+        cameraName: data.cameraName,
         width:obj.width,
         height: obj.height,
         fps: obj.fps,
