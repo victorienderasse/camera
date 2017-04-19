@@ -208,6 +208,7 @@ socket.on('connect', function () {
       var obj = JSON.parse(data);
       socket.emit('getConfigRes', {
         cameraID: cameraID,
+        cameraName: cameraName,
         width:obj.width,
         height: obj.height,
         fps: obj.fps,
