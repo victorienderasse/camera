@@ -203,6 +203,7 @@ socket.on('connect', function () {
 
   socket.on('getConfig', function(data){
     console.log('getConfig event');
+    console.log('camera name = '+ data.cameraName);
     fs.readFile('../../python/conf.json', 'utf8', function(err, data){
       if(err) throw err;
       var obj = JSON.parse(data);
