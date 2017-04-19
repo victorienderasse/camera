@@ -108,15 +108,7 @@ socket.on('connect', function () {
       "--name",
       data.name,
       "-t",
-      "0",
-      '--resolution',
-      data.resolution,
-      '--fps',
-      data.fps,
-      '--brightness',
-      data.brightness,
-      '--contrast',
-      data.contrast
+      "0"
     ];
     execCmd(args);
   });
@@ -132,15 +124,7 @@ socket.on('connect', function () {
       "--record",
       "False",
       "--id",
-      data.cameraID,
-      '--resolution',
-      data.resolution,
-      '--fps',
-      data.fps,
-      '--brightness',
-      data.brightness,
-      '--contrast',
-      data.contrast
+      data.cameraID
     ];
     execCmd(args);
   });
@@ -156,15 +140,7 @@ socket.on('connect', function () {
       "--id",
       data.cameraID,
       "--record",
-      "True",
-      '--resolution',
-      data.resolution,
-      '--fps',
-      data.fps,
-      '--brightness',
-      data.brightness,
-      '--contrast',
-      data.contrast
+      "True"
     ];
     execCmd(args);
   });
