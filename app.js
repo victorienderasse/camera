@@ -234,8 +234,8 @@ socket.on('connect', function () {
             height = 1200;
     }
     getConfig(function(config){
-      config.width = parseInt(width);
-      config.height = parseInt(height);
+      config.width = width;
+      config.height = height;
       config.fps = parseInt(data.fps);
       config.brightness = parseInt(data.brightness);
       config.contrast = parseInt(data.contrast);
