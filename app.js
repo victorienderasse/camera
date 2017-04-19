@@ -204,18 +204,16 @@ socket.on('connect', function () {
   socket.on('getConfig', function(data){
     console.log('getConfig event');
     console.log('camera name = '+ data.cameraName);
-    fs.readFile('../../python/conf.json', 'utf8', function(err, data){
-      if(err) throw err;
-      var obj = JSON.parse(data);
-      console.log('cameraName 2 = '+data.cameraName);
+
+    getConfig(function(config){
       socket.emit('getConfigRes', {
         cameraID: data.cameraID,
         cameraName: data.cameraName,
-        width:obj.width,
-        height: obj.height,
-        fps: obj.fps,
-        brightness: obj.brightness,
-        contrast: obj.contrast
+        width:config.width,
+        height: config.height,
+        fps: config.fps,
+        brightness: config.brightness,
+        contrast: config.contrast
       });
     });
   });
@@ -261,6 +259,13 @@ socket.on('connect', function () {
   }
 
 
+  function getConfig(callback){
+    fs.readFile('../../python/conf.json', 'utf8', function(err, data){
+      if(err) throw err;
+      var obj = JSON.parse(data);
+      callback(obj);
+    });
+  }
 
 });
 
