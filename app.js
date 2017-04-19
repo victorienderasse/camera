@@ -219,23 +219,21 @@ socket.on('connect', function () {
 
 
   socket.on('updateConfigFile', function(data){
-    var width, height;
-    switch(data.resolution){
-      case 1:
-          width = 640;
-          height = 480;
-          break;
-      case 2:
-          width = 1200;
-          height = 800;
-          break;
-      case 3:
-            width = 1600;
-            height = 1200;
-    }
+
     getConfig(function(config){
-      config.width = width;
-      config.height = height;
+      switch(data.resolution){
+        case 1:
+          config.width = 640;
+          config.height = 480;
+          break;
+        case 2:
+          config.width = 1200;
+          config.height = 800;
+          break;
+        case 3:
+          config.width = 1600;
+          config.height = 1200;
+      }
       config.fps = parseInt(data.fps);
       config.brightness = parseInt(data.brightness);
       config.contrast = parseInt(data.contrast);
