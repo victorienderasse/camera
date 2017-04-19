@@ -203,7 +203,6 @@ socket.on('connect', function () {
 
   socket.on('getConfig', function(data){
     console.log('getConfig event');
-    console.log('camera name = '+ data.cameraName);
 
     getConfig(function(config){
       socket.emit('getConfigRes', {
@@ -217,6 +216,33 @@ socket.on('connect', function () {
       });
     });
   });
+
+
+  socket.on('updateConfigFile', function(data){
+    var width, height;
+    switch(data.resolution){
+      case 1:
+          width = 640;
+          height = 480;
+          break;
+      case 2:
+          width = 1200;
+          height = 800;
+          break;
+      case 3:
+            width = 1600;
+            height = 1200;
+    }
+    getConfig(function(config){
+      config.width = width;
+      config.height = height;
+      config.fps = data.fps;
+      config.brightness = data.brightness;
+      config.contrast = data.contrast;
+      fs.writeFile('../../python/conf.json',JSON.stringify(config));
+    });
+  });
+
 
   //Functions-----------------------------
 
@@ -266,6 +292,7 @@ socket.on('connect', function () {
       callback(obj);
     });
   }
+
 
 });
 
