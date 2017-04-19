@@ -200,9 +200,17 @@ socket.on('connect', function () {
     spawn('python',args);
   });
 
-  
 
-//Functions-----------------------------
+  socket.on('getConfig', function(){
+    console.log('getConfig event');
+    fs.readFile('../../python/config.json', 'utf8', function(err, data){
+      if(err) throw err;
+      var obj = JSON.parse(data);
+      console.log('width = '+obj.width);
+    });
+  });
+
+  //Functions-----------------------------
 
 
   function execCmd(args){
