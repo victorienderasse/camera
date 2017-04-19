@@ -221,7 +221,7 @@ socket.on('connect', function () {
   socket.on('updateConfigFile', function(data){
 
     getConfig(function(config){
-      switch(data.resolution){
+      switch(parseInt(data.resolution)){
         case 1:
           config.width = 640;
           config.height = 480;
