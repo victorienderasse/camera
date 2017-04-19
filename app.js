@@ -206,7 +206,13 @@ socket.on('connect', function () {
     fs.readFile('../../python/conf.json', 'utf8', function(err, data){
       if(err) throw err;
       var obj = JSON.parse(data);
-      console.log('width = '+obj.width);
+      socket.emit('getConfigRes', {
+        width:obj.width,
+        height: obj.height,
+        fps: obj.fps,
+        brightness: obj.brightness,
+        contrast: obj.contrast
+      });
     });
   });
 
