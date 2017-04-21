@@ -218,6 +218,11 @@ socket.on('connect', function () {
   });
 
 
+  socket.on('reboot', function(){
+    reboot();
+  });
+
+
   //Functions-----------------------------
 
 
@@ -265,6 +270,11 @@ socket.on('connect', function () {
       var obj = JSON.parse(data);
       callback(obj);
     });
+  }
+
+
+  function reboot(){
+    exec('sudo reboot');
   }
 
 
