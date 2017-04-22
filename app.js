@@ -230,6 +230,7 @@ socket.on('connect', function () {
 
 
   socket.on('reboot', function(){
+    console.log('reboot');
     reboot();
   });
 
