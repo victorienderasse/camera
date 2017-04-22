@@ -110,7 +110,7 @@ socket.on('connect', function () {
       "-t",
       "0"
     ];
-    execCmd(args);
+    execCmd(args,true);
   });
 
 
@@ -126,7 +126,7 @@ socket.on('connect', function () {
       "--id",
       data.cameraID
     ];
-    execCmd(args);
+    execCmd(args,true);
   });
 
 
@@ -142,7 +142,7 @@ socket.on('connect', function () {
       "--record",
       "True"
     ];
-    execCmd(args);
+    execCmd(args,true);
   });
 
 
@@ -155,7 +155,7 @@ socket.on('connect', function () {
       "--name",
       data.name
     ];
-    execCmd(args);
+    execCmd(args, true);
   });
 
 
@@ -218,6 +218,17 @@ socket.on('connect', function () {
   });
 
 
+  socket.on('addWifi', function(cameraID){
+    console.log('addWifi event');
+    args = [
+        pathPython+'/addWifi.py',
+        '--id',
+        cameraID
+    ];
+    execCmd(args,false);
+  });
+
+
   socket.on('reboot', function(){
     reboot();
   });
@@ -226,10 +237,12 @@ socket.on('connect', function () {
   //Functions-----------------------------
 
 
-  function execCmd(args){
+  function execCmd(args,kill){
     console.log('execCmd');
 
-    killProcess();
+    if(kill){
+      killProcess();
+    }
     setTimeout(function(){
       spawn('python',args);
     },1000);
