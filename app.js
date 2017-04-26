@@ -157,7 +157,9 @@ socket.on('connect', function () {
       "--id",
       data.cameraID,
       "--name",
-      data.name
+      data.name,
+      '--conf',
+      pathPython+'/conf.json'
     ];
     execCmd(args, true);
   });
@@ -175,7 +177,9 @@ socket.on('connect', function () {
         "--brightness",
         data.brightness,
         "--contrast",
-        data.contrast
+        data.contrast,
+        "--conf",
+        pathPython+'/conf.json'
     ];
     spawn('python',args);
   });
@@ -227,7 +231,9 @@ socket.on('connect', function () {
     args = [
         pathPython+'/addWifi.py',
         '--id',
-        cameraID
+        cameraID,
+        '--conf',
+        pathPython+'/conf.json'
     ];
     execCmd(args,false);
   });
