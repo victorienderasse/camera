@@ -78,7 +78,7 @@ socket.on('connect', function () {
       type = pathPython+'/motion_detector.py';
     }
 
-    var cmdPython = pathPython+'/'+type+' --conf '+pathPython+'/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID+' --resolution '+data.resolution+' --fps '+data.fps+' --brightness '+data.brightness+' --contrast '+data.contrast;
+    var cmdPython = pathPython+'/'+type+' --conf '+pathPython+'/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
 
     var cmd = 'echo "'+cron+cmdPython+'" > /etc/cron.d/record'+data.recordID;
     exec(cmd, function(err){ if(err){ throw err;  } });
@@ -119,12 +119,14 @@ socket.on('connect', function () {
 
     var args = [
       pathPython+"/liveStream.py",
-      "--name",
-      data.name,
-      "--record",
-      "False",
-      "--id",
-      data.cameraID
+        "-c",
+        pathPython+'/conf.json',
+        "--name",
+        data.name,
+        "--record",
+        "False",
+        "--id",
+        data.cameraID
     ];
     execCmd(args,true);
   });
@@ -135,6 +137,8 @@ socket.on('connect', function () {
     console.log(data.name);
     var args = [
       pathPython+"/liveStream.py",
+      "-c",
+      pathPython+'/conf.json',
       "--name",
       data.name,
       "--id",
