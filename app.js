@@ -69,7 +69,7 @@ socket.on('connect', function () {
 
     timeRecord = end - begin;
 
-    var cron = data.begin_minute+' '+data.begin_hour+' * * '+data.frequency+' pi ';
+    var cron = data.begin_minute+' '+data.begin_hour+' * * '+data.frequency+' root ';
 
     var type;
     if(data.type == 'record'){
@@ -81,6 +81,7 @@ socket.on('connect', function () {
     var cmdPython = type+' --conf '+pathPython+'/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
 
     var cmd = 'echo "'+cron+cmdPython+'" > /etc/cron.d/record'+data.recordID;
+    console.log('cmd = '+cmd);
     exec(cmd, function(err){ if(err){ throw err;  } });
 
   });
