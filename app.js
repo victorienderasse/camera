@@ -78,7 +78,7 @@ socket.on('connect', function () {
       type = pathPython+'/motion_detector.py';
     }
 
-    var cmdPython = pathPython+'/'+type+' --conf '+pathPython+'/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
+    var cmdPython = type+' --conf '+pathPython+'/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
 
     var cmd = 'echo "'+cron+cmdPython+'" > /etc/cron.d/record'+data.recordID;
     exec(cmd, function(err){ if(err){ throw err;  } });
@@ -203,7 +203,7 @@ socket.on('connect', function () {
 
 
   socket.on('updateConfigFile', function(data){
-
+    consle.log('updateConfigFile');
     getConfig(function(config){
       switch(parseInt(data.resolution)){
         case 1:
