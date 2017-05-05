@@ -204,7 +204,7 @@ socket.on('connect', function () {
 
 
   socket.on('updateConfigFile', function(data){
-    consle.log('updateConfigFile');
+    console.log('updateConfigFile');
     getConfig(function(config){
       switch(parseInt(data.resolution)){
         case 1:
@@ -252,9 +252,8 @@ socket.on('connect', function () {
   function execCmd(args,kill){
     console.log('execCmd');
 
-    if(kill){
-      killProcess();
-    }
+    killProcess();
+
     setTimeout(function(){
       spawn('python',args);
     },1000);
