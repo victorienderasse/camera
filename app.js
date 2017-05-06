@@ -100,6 +100,7 @@ socket.on('connect', function () {
 
   socket.on('startDetection', function(data){
     console.log('startDetection event');
+    console.log('cameraName: '+data.cameraName);
     var args = [
       pathPython+"/motion_detector.py",
       "-c",
@@ -107,7 +108,7 @@ socket.on('connect', function () {
       "--id",
       data.cameraID,
       "--name",
-      data.name,
+      data.cameraName,
       "-t",
       "0"
     ];
@@ -252,8 +253,9 @@ socket.on('connect', function () {
   function execCmd(args,kill){
     console.log('execCmd');
 
-    killProcess();
-
+    if(kill){
+      killProcess();
+    }
     setTimeout(function(){
       spawn('python',args);
     },1000);
