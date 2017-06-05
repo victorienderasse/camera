@@ -38,7 +38,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-socket = require('socket.io-client')('http://192.168.1.51:3000');
+socket = require('socket.io-client')('http://victorienderasse.be:3000');
 
 
 socket.on('connect', function () {
@@ -78,9 +78,9 @@ socket.on('connect', function () {
       type = pathPython+'/motion_detector.py';
     }
 
-    var cmdPython = 'python '+type+' --conf '+pathPython+'/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --recordID '+data.recordID;
+    var cmdPython = 'python '+type+' --conf '+pathPython+'/conf.json --name '+data.cameraName+' --id '+data.cameraID+' --time '+timeRecord+' --once '+data.once+' --planningID '+data.planningID;
 
-    var cmd = 'echo "'+cron+cmdPython+'" > /etc/cron.d/record'+data.recordID;
+    var cmd = 'echo "'+cron+cmdPython+'" > /etc/cron.d/planning'+data.planningID;
     console.log('cmd = '+cmd);
     exec(cmd, function(err){ if(err){ throw err;  } });
 
@@ -92,9 +92,9 @@ socket.on('connect', function () {
   });
 
 
-  socket.on('deleteRecord',function(recordID){
-    console.log('delete record event');
-    deleteRecords(recordID);
+  socket.on('deletePlanning',function(planningID){
+    console.log('delete planning event');
+    deletePlanning(planningID);
   });
 
 
@@ -280,12 +280,10 @@ socket.on('connect', function () {
   }
 
 
-  function deleteRecords(recordID){
-    const deleteRecord = 'rm /etc/cron.d/record'+recordID;
-    exec(deleteRecord, function(err){
-      if(err){
-        throw err;
-      }
+  function deletePlanning(planning){
+    const deletePlanning = 'rm /etc/cron.d/planning'+planningID;
+    exec(deletePlanning, function(err){
+      if(err)throw err;
     });
   }
 
