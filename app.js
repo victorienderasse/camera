@@ -281,7 +281,7 @@ socket.on('connect', function () {
   }
 
 
-  function deletePlanning(planning){
+  function deletePlanning(planningID){
     const deletePlanning = 'rm /etc/cron.d/planning'+planningID;
     exec(deletePlanning, function(err){
       if(err)throw err;
