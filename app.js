@@ -94,6 +94,7 @@ socket.on('connect', function () {
 
   socket.on('deletePlanning',function(planningID){
     console.log('delete planning event');
+    console.log('planningID : '+planningID);
     deletePlanning(planningID);
   });
 
