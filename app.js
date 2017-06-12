@@ -8,6 +8,7 @@ const http = require('http');
 const exec = require('child_process').exec;
 const spawn = require('child_process').spawn;
 const fs = require('fs');
+const ip = require('ip');
 
 const app = express();
 const port = 8081;
@@ -278,6 +279,7 @@ socket.on('connect', function () {
       }
       socket.emit('camera', stdout);
     });
+    socket.emit('rpiip',ip.address());
   }
 
 
